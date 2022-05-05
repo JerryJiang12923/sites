@@ -4381,11 +4381,8 @@ _config = {
 				//showAdDivs(false);
 				this._pause = !0, d.d_share.hide(), d.d_content.hide(), d.d_pause.show(), d.dialog.show(), AdObj = '<a href="{url}"  class="btn btn-restart" style="text-decoration: none;">{title}</a>';
 				ADs = [];
-				ADs[0] = ["来了就不想走的城市！", "http://www.lezyo.com/h5/mudidi/gushi_137.html?utm_campaign=color_0720"];
-				ADs[1] = ["西王母的天山!", "http://www.lezyo.com/h5/mudidi/gushi_136.html?utm_campaign=color_0720"];
-				ADs[2] = ["千年一梦大敦煌!", "http://www.lezyo.com/h5/mudidi/gushi_134.html?utm_campaign=color_0720"];
-				ADs[3] = ["厮守在喀什吧！", "http://www.lezyo.com/h5/mudidi/gushi_143.html?utm_campaign=color_0720"];
-				ADs[4] = ["下载APP获取200元!", "http://www.lezyo.com/h5/download/?utm_source=lezyo&utm_medium=wechat&utm_campaign=color_0720"];
+				ADs[0] = ["小米12923作者主页", "https://gitee.com/jyh12923"];
+				ADs[1] = ["圈小猫", "https://jyh12923.gitee.io/websites/catch_the_cat"];
 				arrIndex = Math.floor(Math.random() * ADs.length);
 				AdObj = AdObj.replace("{title}", ADs[arrIndex][0]);
 				AdObj = AdObj.replace("{url}", ADs[arrIndex][1]);
