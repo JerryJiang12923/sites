@@ -4472,7 +4472,7 @@ function(e) {
 				}
 				document.addEventListener("WeixinJSBridgeReady", function() {
 					WeixinJSBridge && (WeixinJSBridge.on("menu:share:appmessage", function() {
-						var b = Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "关，击败" + Game.lastGamePercent + "%的人！我是【" + Game.lastGameTxt + "】！不服来战！" : shareData.tTitle;
+						var b = Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "0关，击败" + Game.lastGamePercent + "%的人！我是【" + Game.lastGameTxt + "】！不服来战！" : shareData.tTitle;
 						WeixinJSBridge.invoke("sendAppMessage", {
 							img_url: shareData.imgUrl,
 							link: shareData.timeLineLink,
@@ -4480,7 +4480,7 @@ function(e) {
 							title: b
 						}, c)
 					}), WeixinJSBridge.on("menu:share:timeline", function() {
-						var b = Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "关，击败" + Game.lastGamePercent + "%的人！我是【" + Game.lastGameTxt + "】！不服来战！" : shareData.tTitle;
+						var b = Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "0关，击败" + Game.lastGamePercent + "%的人！我是【" + Game.lastGameTxt + "】！不服来战！" : shareData.tTitle;
 						WeixinJSBridge.invoke("shareTimeline", {
 							img_url: shareData.imgUrl,
 							img_width: "640",
