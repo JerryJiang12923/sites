@@ -4381,11 +4381,8 @@ _config = {
 				//showAdDivs(false);
 				this._pause = !0, d.d_share.hide(), d.d_content.hide(), d.d_pause.show(), d.dialog.show(), AdObj = '<a href="{url}"  class="btn btn-restart" style="text-decoration: none;">{title}</a>';
 				ADs = [];
-				ADs[0] = ["来了就不想走的城市！", "http://www.lezyo.com/h5/mudidi/gushi_137.html?utm_campaign=color_0720"];
-				ADs[1] = ["西王母的天山!", "http://www.lezyo.com/h5/mudidi/gushi_136.html?utm_campaign=color_0720"];
-				ADs[2] = ["千年一梦大敦煌!", "http://www.lezyo.com/h5/mudidi/gushi_134.html?utm_campaign=color_0720"];
-				ADs[3] = ["厮守在喀什吧！", "http://www.lezyo.com/h5/mudidi/gushi_143.html?utm_campaign=color_0720"];
-				ADs[4] = ["下载APP获取200元!", "http://www.lezyo.com/h5/download/?utm_source=lezyo&utm_medium=wechat&utm_campaign=color_0720"];
+				ADs[0] = ["小米12923作者主页", "https://gitee.com/jyh12923"];
+				ADs[1] = ["圈小猫", "https://jyh12923.gitee.io/websites/catch_the_cat"];
 				arrIndex = Math.floor(Math.random() * ADs.length);
 				AdObj = AdObj.replace("{title}", ADs[arrIndex][0]);
 				AdObj = AdObj.replace("{url}", ADs[arrIndex][1]);
@@ -4415,7 +4412,7 @@ _config = {
 				this.lastLv = this.lv, this.lastGameTxt = h.txt, this.lastGamePercent = h.percent, d.d_share.hide().find("h3").text(this.lastGameTxt), d.d_share.hide().find("h2").text(this.lv + "分"), d.d_content.hide(), d.d_gameover.show().find("h3").text(this.lastGameTxt), d.d_gameover.show().find("h2").text(this.lv + "分"), e.find("span").fadeOut(1000, function() {
 					d.dialog.fadeIn()
 				}), this._pause = !0, this.reset();
-				setTitle(Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "关，我的视力超过" + Game.lastGameTxt + "！不服来战！" : "保护眼睛，16分以下不要再玩手机了！");
+				setTitle(Game.lastLv > 0 ? "我闯过" + (Game.lastLv) + "0关，我的视力超过" + Game.lastGameTxt + "！不服来战！" : "保护眼睛，16分以下不要再玩手机了！");
 				//showAdDivs(true);
 
 				//if (Game.lastLv > 0) document.getElementById("top").innerHTML = "<img src='../gametop.asp?pid=10&id=" + Game.lastLv + "' style='width:0px;height:0px;display:none;'>";
@@ -4516,7 +4513,7 @@ function() {
 		j = $("#help p"),
 		i = $("#help_color"),
 		h = {
-			lvT: ["蝙蝠", "鼴鼠", "狗", "狗", "猫", "猫", "老虎", "老虎", "鹰"],
+			lvT: ["赵家祯", "赵禹翔", "李易泽", "张沛林", "蒋宇皓", "傅老师", "乔老师", "米粒", "滚，你作弊"],
 			render: function(l, k) {
 				this.lv = k, j.hide(), i.show();
 				var d = _config.color.lvMap[k] || _.last(_config.color.lvMap);
