@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>贪吃蛇</title>
+</head>
+<body>
+  <canvas id="game" width="400" height="400"></canvas>
+  <script>
+    // 定义游戏区域的宽度和高度
+    var gameWidth = 400;
+    var gameHeight = 400;
+
+    // 获取 canvas 元素
+    var game = document.getElementById('game');
+    var ctx = game.getContext('2d');
+
+    // 定义贪吃蛇的移动速度
+    var speed = 10;
+
+    // 定义贪吃蛇的起始位置
+    var snake = [
+      {x: 150, y: 150},
+      {x: 140, y: 150},
+      {x: 130, y: 150},
+      {x: 120, y: 150},
+      {x: 110, y: 150}
+    ];
+
+    // 定义贪吃蛇的初始方向，向右
+    var direction = 'right';
+
+    // 定义食物的初始位置
+    var food = {
+      x: Math.floor(Math.random() * gameWidth),
+      y: Math.floor(Math.random() * gameHeight)
+    };
+
+    // 绘制贪吃蛇
+    function drawSnake() {
+      ctx.fillStyle = '#33cc33';
+      snake.forEach(function(segment) {
+        ctx.fillRect(segment.x, segment.y, 10, 10);
+      });
+    }
+
+    // 绘制食物
+    function drawFood() {
+      ctx.fillStyle = '#cc0000';
+      ctx.fillRect(food.x, food.y, 10, 10);
+    }
+
+    // 清除屏幕
+    function clear() {
+      ctx.clearRect(0, 0, gameWidth, gameHeight);
+    }
+
+    // 当贪吃蛇遇到屏幕边界时，判断是否游戏结束
+    function checkCollision(x, y, array) {
+      if (x < 0 || x > gameWidth - 10 || y < 0 || y > gameHeight - 10)
+        return true;
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].x === x && array[i].y === y)
+          return true;
+      }
+      return false;
+    }
+
+    // 更新贪吃蛇的位置
+    function updateSnake() {
+      var head = {x: snake[0].x, y: snake[0].y};
+      switch(direction) {
+        case 'right':
+          head.x += speed;
+          break;
+        case 'left':
+          head.x -= speed;
+          break;
+        case 'up':
+          head.y -= speed;
+          break;
+        case 'down':
+          head.y += speed;
+          break;
+      }
+      // 如果贪吃蛇遇到了食物，就增长一节
+      if (head.x === food.x && head.y === food.y) {
+        food = {
+          x: Math.floor(Math.random() * gameWidth),
+          y: Math.floor(Math.random() * gameHeight)
+        };
+      } else {
+        snake.pop();
+      }
+      // 判断游戏是否结束
+      if (checkCollision(head.x, head.y, snake)) {
+        clearInterval(gameLoop);
+        alert('游戏结束！');
+      }
+      snake.unshift(head);
+    }
+
+    // 键盘监听事件，更新贪吃蛇的方向
+    document.addEventListener('keydown', function(e) {
+      var key = e.which;
+      if (key === 37 && direction !== 'right') direction = 'left';
+      else if (key === 38 && direction !== 'down') direction = 'up';
+      else if (key === 39 && direction !== 'left') direction = 'right';
+      else if (key === 40 && direction !== 'up') direction = 'down';
+    });
+
+    // 定义游戏循环，每隔 100 毫秒更新一次贪吃蛇的位置
+    var gameLoop = setInterval(function() {
+      clear();
+      drawFood();
+      updateSnake();
+      drawSnake();
+    }, 100);
+  </script>
+</body>
+</html>
