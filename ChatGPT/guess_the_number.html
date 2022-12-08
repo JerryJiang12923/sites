@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>猜数游戏</title>
+</head>
+<body>
+  <h1>猜数游戏</h1>
+  <p>我想出了一个1到100之间的数字。你需要猜出它是多少。</p>
+  <input type="text" id="guess" placeholder="输入你的猜测">
+  <button type="button" onclick="checkGuess()">猜一猜</button>
+  <p id="result"></p>
+
+  <script>
+    let secretNumber = Math.floor(Math.random() * 100) + 1; // 生成1到100之间的随机数
+
+    function checkGuess() {
+      let guess = document.getElementById('guess').value;
+      if (guess == secretNumber) {
+        document.getElementById('result').innerHTML = '恭喜你，猜对了！';
+      } else if (guess > secretNumber) {
+        document.getElementById('result').innerHTML = '你猜的数字太大了，再小一点。';
+      } else {
+        document.getElementById('result').innerHTML = '你猜的数字太小了，再大一点。';
+      }
+    }
+  </script>
+</body>
+</html>
