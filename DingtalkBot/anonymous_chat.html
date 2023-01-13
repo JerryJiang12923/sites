@@ -3,62 +3,8 @@
  <head>
  <meta charset="utf-8">
  <title>钉钉机器人GUI</title>
- <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
  </head>
  <body>
- <py-script>
-   import time
-   import hmac
-   import hashlib
-   import base64
-   import urllib.parse
-
-   timestamp = str(round(time.time() * 1000))
-   secret = 'SEC5ad60a15533661cf7ce45975e3526b0aea6c67a0cc6a355b709048ac19f1c148'
-   secret_enc = secret.encode('utf-8')
-   string_to_sign = '{}\n{}'.format(timestamp, secret)
-   string_to_sign_enc = string_to_sign.encode('utf-8')
-   hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-   sign = urllib.parse.quote(base64.b64encode(hmac_code))
-   # print(timestamp)
-   # print(sign)
-
-
-   import requests,json   #导入依赖库
-   headers={'Content-Type': 'application/json'}   #定义数据类型
-   webhook = 'https://oapi.dingtalk.com/robot/send?access_token=6d0e74b36ef1be722eef7f3d1b632202eaaf910f05b2599838905756ef9ceeb9&timestamp='+timestamp+"&sign="+sign
-
-   def help():
-   				print('----Help----')
-   				print('欢迎使用匿名聊天室。')
-   				print('输入#$help获得帮助。')
-   				print('输入#$quit退出系统。')
-   				print('别的功能（比如@别人和发送图片之类的）我还在写。')
-   				print('以后可能会出。')
-
-   cycle = 1
-   msg = ''
-
-   print('欢迎使用匿名聊天室。')
-   print('输入#$help获得帮助。')
-
-   while cycle == 1:
-       msg = input('>>>')
-       if msg == '#$help':
-           help()
-       elif msg == '#$quit':
-           cycle = 0
-       else:
-           #定义要发送的数据
-           #"at": {"atMobiles": "['"+ mobile + "']"
-           data = {
-               "msgtype": "text",
-               "text": {"content": msg},
-               "isAtAll": True}
-           res = requests.post(webhook, data=json.dumps(data), headers=headers)   #发送post请求
-
-           print(res.text)
- </py-script>
+  <script type="text/javascript" src="./anonymous_chat.js"></script>
  </body>
  </html>
