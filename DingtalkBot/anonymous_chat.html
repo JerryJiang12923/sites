@@ -1,10 +1,54 @@
 <!DOCTYPE html>
- <html>
- <head>
- <meta charset="utf-8">
- <title>钉钉机器人GUI</title>
- </head>
- <body>
-  <script type="text/javascript" src="./anonymous_chat.js"></script>
- </body>
- </html>
+<html>
+<head>
+	<title>DingTalk Bot Message Sender</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body>
+	<h1>DingTalk Bot Message Sender</h1>
+	<p>Enter your message below:</p>
+	<input type="text" id="message"><br><br>
+	<button onclick="send()">Send</button>
+
+	<script>
+		// Set the necessary variables
+		var accessToken = "0f95f0045ea42cd6f3ea4bbc15fd98ab91af14754a4bcfb4ac58a10f20092f1a";
+		var secret = "SEC865694c0a345005602545300ed442155039d436642fe3bbd03029c8011f52921";
+		var timestamp = Date.now();
+		var stringToSign = timestamp + "\n" + secret;
+		var sign = encodeURIComponent(CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(stringToSign, secret)));
+		var webhook = "https://oapi.dingtalk.com/robot/send?access_token=" + accessToken + "&timestamp=" + timestamp + "&sign=" + sign;
+		var message = document.getElementById("message").value;
+
+		// Send the message
+		function send() {
+			message = document.getElementById("message").value;
+			console.log("Message to send: " + message);
+			console.log("Webhook URL: " + webhook);
+			fetch(webhook, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8',
+				},
+				body: JSON.stringify({"msgtype": "text", "text": {"content": message}})
+			})
+			.then(response => {
+				console.log("Response status code: " + response.status);
+				console.log("Response body: " + response.text());
+				if (response.status === 200) {
+					console.log("Message sent successfully!");
+				} else {
+					console.log("Error sending message!");
+				}
+			})
+			.catch(error => console.error('Error sending message:', error));
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
