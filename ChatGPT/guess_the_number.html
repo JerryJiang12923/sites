@@ -2,12 +2,60 @@
 <html>
 <head>
   <title>猜数游戏</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+      font-size: 36px;
+      margin-top: 50px;
+    }
+    
+    p {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+    
+    input[type="text"] {
+      padding: 10px;
+      font-size: 20px;
+      border-radius: 5px;
+      border: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    button {
+      padding: 10px 15px;
+      font-size: 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s ease-in-out;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <h1>猜数游戏</h1>
   <p>我想出了一个1到100之间的数字。你需要猜出它是多少。</p>
   <input type="text" id="guess" placeholder="输入你的猜测">
+  <br>
   <button type="button" onclick="checkGuess()">猜一猜</button>
+  <br>
   <p id="result"></p>
 
   <script>
