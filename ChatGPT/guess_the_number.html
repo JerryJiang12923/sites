@@ -1,198 +1,145 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<title>猜数字游戏</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f2f2f2;
-		}
+  <title>猜数游戏</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+      font-size: 36px;
+      margin-top: 50px;
+    }
+    
+    p {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+    
+    input[type="text"] {
+      padding: 10px;
+      font-size: 20px;
+      border-radius: 5px;
+      border: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    button {
+      padding: 10px 15px;
+      font-size: 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s ease-in-out;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
 
-		.container {
-			margin: 0 auto;
-			max-width: 600px;
-			padding: 20px;
-			background-color: #fff;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-			border-radius: 10px;
-			text-align: center;
-			margin-top: 50px;
-		}
+    #history {
+      font-size: 20px;
+      margin-top: 20px;
+      text-align: left;
+    }
 
-		h1 {
-			font-size: 36px;
-			color: #007bff;
-			margin-bottom: 20px;
-			text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		}
+    #history li {
+      margin: 5px 0;
+    }
 
-		p {
-			font-size: 24px;
-			margin-bottom: 20px;
-		}
+    #guesses-left {
+      font-size: 20px;
+      margin-top: 20px;
+    }
 
-		input[type="text"] {
-			padding: 10px;
-			font-size: 20px;
-			border-radius: 5px;
-			border: 1px solid #ccc;
-			margin-right: 10px;
-			width: 50%;
-			max-width: 250px;
-			text-align: center;
-		}
+    #possible-numbers {
+      font-size: 20px;
+      margin-top: 20px;
+    }
 
-		button {
-			padding: 10px 20px;
-			font-size: 20px;
-			border-radius: 5px;
-			border: none;
-			background-color: #007bff;
-			color: #fff;
-			cursor: pointer;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-			transition: background-color 0.2s ease-in-out;
-		}
-
-		button:hover {
-			background-color: #0056b3;
-		}
-
-		.result {
-			font-size: 36px;
-			font-weight: bold;
-			margin-top: 30px;
-			color: #007bff;
-			text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		}
-
-		.guesses-left {
-			font-size: 24px;
-			margin-top: 30px;
-			color: #007bff;
-			text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		}
-
-		.history {
-			font-size: 24px;
-			margin-top: 30px;
-			text-align: left;
-			max-height: 200px;
-			overflow-y: auto;
-			padding-left: 0;
-			list-style: none;
-			margin-bottom: 20px;
-		}
-
-		.history li {
-			margin: 10px 0;
-			color: #007bff;
-			text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		}
-
-		.possible-numbers {
-			font-size: 24px;
-			margin-top: 30px;
-			color: #007bff;
-			text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-		}
-
-		.warning {
-			color: red;
-			font-size: 20px;
-			margin-top: 10px;
-		}
-	</style>
+    #warning {
+      color: red;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-	<div class="container">
-		<h1>猜数字游戏</h1>
-		<p>我想了一个1到100之间的数字，你需要猜出它是多少。</p>
-		<form onsubmit="checkGuess(); return false;">
-			<input type="text" id="guess" placeholder="输入你的猜测" autofocus>
-			<button type="submit">猜一猜</button>
-		</form>
-		<p class="result" id="result"></p>
-		<p class="guesses-left" id="guesses-left"></p>
-		<ul class="history" id="history"></ul>
-		<p class="possible-numbers" id="possible-numbers"></p>
-		<p class="warning" id="warning"></p>
-	</div>
+  <h1>猜数游戏</h1>
+  <p>我想出了一个1到100之间的数字。你需要猜出它是多少。</p>
+  <input type="text" id="guess" placeholder="输入你的猜测">
+  <br>
+  <button type="button" onclick="checkGuess()">猜一猜</button>
+  <br>
+  <p id="result"></p>
+  <p id="guesses-left"></p>
+  <ul id="history"></ul>
+  <p id="possible-numbers"></p>
+  <p id="warning"></p>
 
-	<script>
-		var secretNumber = Math.floor(Math.random() * 100) + 1;
-		var guessesLeft = 10;
-		var guessedNumbers = [];
+  <script>
+    let secretNumber = Math.floor(Math.random() * 100) + 1; // 生成1到100之间的随机数
+    let numGuesses = 0;
+    let maxGuesses = 10;
+    let guessesLeft = maxGuesses;
+    let possibleNumbers = "1-100";
 
-		function checkGuess() {
-			var guessElement = document.getElementById("guess");
-			var guess = parseInt(guessElement.value);
-			var resultElement = document.getElementById("result");
-			var guessesLeftElement = document.getElementById("guesses-left");
-			var historyElement = document.getElementById("history");
-			var possibleNumbersElement = document.getElementById("possible-numbers");
-			var warningElement = document.getElementById("warning");
+    function checkGuess() {
+      let guess = Number(document.getElementById('guess').value);
+      if (guess < 1 || guess > 100 || isNaN(guess) || !isNumberInPossibleRange(guess)) {
+        document.getElementById('warning').innerHTML = `请输入${possibleNumbers}之间的数字！`;
+        return;
+      }
 
-			if (isNaN(guess) || guess < 1 || guess > 100) {
-				warningElement.textContent = "请输入1到100之间的数字。";
-				return;
-			}
+      numGuesses++;
+      guessesLeft--;
+      if (guess == secretNumber) {
+        document.getElementById('result').innerHTML = '恭喜你，猜对了！';
+        document.getElementById('guesses-left').innerHTML = '';
+      } else if (guess > secretNumber) {
+        document.getElementById('result').innerHTML = '你猜的数字太大了，再小一点。';
+        possibleNumbers = `${possibleNumbers.split("-")[0]}-${guess-1}`;
+      } else {
+        document.getElementById('result').innerHTML = '你猜的数字太小了，再大一点。';
+        possibleNumbers = `${guess+1}-${possibleNumbers.split("-")[1]}`;
+      }
 
-			if (guessedNumbers.includes(guess)) {
-				warningElement.textContent = "你已经猜过这个数字了，请猜一个新的数字。";
-				return;
-			}
+      document.getElementById('guess').value = '';
+      document.getElementById('guess').focus();
 
-			guessElement.value = "";
-			guessElement.focus();
+      let historyItem = document.createElement('li');
+      historyItem.textContent = `第 ${numGuesses} 次猜测：${guess}`;
+      document.getElementById('history').appendChild(historyItem);
 
-			guessedNumbers.push(guess);
+      if (numGuesses >= maxGuesses) {
+        document.getElementById('guesses-left').innerHTML = '很遗憾，你已经用完了所有猜测机会。';
+        document.getElementById('guess').disabled = true;
+        document.getElementsByTagName('button')[0].disabled = true;
+      } else {
+        document.getElementById('guesses-left').innerHTML = `你还剩下 ${guessesLeft} 次猜测机会。`;
+      }
 
-			var guessString = "<li>你猜的数字是 " + guess + "。</li>";
-			historyElement.insertAdjacentHTML("beforeend", guessString);
+      document.getElementById('possible-numbers').innerHTML = `可能的数字范围：${possibleNumbers}`;
+      document.getElementById('warning').innerHTML = '';
+    }
 
-			if (guess === secretNumber) {
-				resultElement.textContent = "恭喜你，你猜对了！";
-				resultElement.style.color = "green";
-				guessesLeftElement.textContent = "";
-				possibleNumbersElement.textContent = "";
-				guessElement.disabled = true;
-				return;
-			}
-
-			guessesLeft--;
-
-			if (guessesLeft === 0) {
-				resultElement.textContent = "很遗憾，你没有猜对。正确的数字是 " + secretNumber + "。";
-				resultElement.style.color = "red";
-				guessesLeftElement.textContent = "";
-				possibleNumbersElement.textContent = "";
-				guessElement.disabled = true;
-				return;
-			}
-
-			var possibleNumbers = getPossibleNumbers(guessedNumbers);
-			var possibleNumbersString = "你还有 " + guessesLeft + " 次机会，可能的数字有：" + possibleNumbers.join(", ") + "。";
-			resultElement.textContent = "很遗憾，你猜错了。";
-			resultElement.style.color = "red";
-			guessesLeftElement.textContent = "你还有 " + guessesLeft + " 次机会。";
-				possibleNumbersElement.textContent = possibleNumbersString;
-			return;
-		}
-
-		function getPossibleNumbers(guessedNumbers) {
-			var possibleNumbers = [];
-
-			for (var i = 1; i <= 100; i++) {
-				if (!guessedNumbers.includes(i)) {
-					possibleNumbers.push(i);
-				}
-			}
-
-			return possibleNumbers;
-		}
-	</script>
+    function isNumberInPossibleRange(num) {
+      let range = possibleNumbers.split('-');
+      let min = Number(range[0]);
+      let max = Number(range[1]);
+      return num >= min && num <= max;
+    }
+  </script>
 </body>
 </html>
