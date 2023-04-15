@@ -51,7 +51,6 @@
     #history {
       font-size: 20px;
       margin-top: 20px;
-      text-align: left;
     }
 
     #history li {
@@ -77,7 +76,7 @@
 </head>
 <body>
   <h1>猜数游戏</h1>
-  <p>我想出了一个1到100之间的数字。你需要猜出它是多少。</p>
+  <p>我想出了一个1到1000之间的数字。你需要猜出它是多少。</p>
   <input type="text" id="guess" placeholder="输入你的猜测">
   <br>
   <button type="button" onclick="checkGuess()">猜一猜</button>
@@ -89,15 +88,15 @@
   <p id="warning"></p>
 
   <script>
-    let secretNumber = Math.floor(Math.random() * 100) + 1; // 生成1到100之间的随机数
+    let secretNumber = Math.floor(Math.random() * 1000) + 1; // 生成1到1000之间的随机数
     let numGuesses = 0;
     let maxGuesses = 10;
     let guessesLeft = maxGuesses;
-    let possibleNumbers = "1-100";
+    let possibleNumbers = "1-1000";
 
     function checkGuess() {
       let guess = Number(document.getElementById('guess').value);
-      if (guess < 1 || guess > 100 || isNaN(guess) || !isNumberInPossibleRange(guess)) {
+      if (guess < 1 || guess > 1000 || isNaN(guess) || !isNumberInPossibleRange(guess)) {
         document.getElementById('warning').innerHTML = `请输入${possibleNumbers}之间的数字！`;
         return;
       }
