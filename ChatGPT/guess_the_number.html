@@ -62,6 +62,11 @@
       font-size: 20px;
       margin-top: 20px;
     }
+
+    #possible-numbers {
+      font-size: 20px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -74,12 +79,14 @@
   <p id="result"></p>
   <p id="guesses-left"></p>
   <ul id="history"></ul>
+  <p id="possible-numbers"></p>
 
   <script>
     let secretNumber = Math.floor(Math.random() * 100) + 1; // 生成1到100之间的随机数
     let numGuesses = 0;
     let maxGuesses = 10;
     let guessesLeft = maxGuesses;
+    let possibleNumbers = "1-100";
 
     function checkGuess() {
       let guess = Number(document.getElementById('guess').value);
@@ -90,14 +97,15 @@
 
       numGuesses++;
       guessesLeft--;
-
       if (guess == secretNumber) {
         document.getElementById('result').innerHTML = '恭喜你，猜对了！';
         document.getElementById('guesses-left').innerHTML = '';
       } else if (guess > secretNumber) {
         document.getElementById('result').innerHTML = '你猜的数字太大了，再小一点。';
+        possibleNumbers = `${possibleNumbers.split("-")[0]}-${guess-1}`;
       } else {
         document.getElementById('result').innerHTML = '你猜的数字太小了，再大一点。';
+        possibleNumbers = `${guess+1}-${possibleNumbers.split("-")[1]}`;
       }
 
       document.getElementById('guess').value = '';
@@ -114,6 +122,8 @@
       } else {
         document.getElementById('guesses-left').innerHTML = `你还剩下 ${guessesLeft} 次猜测机会。`;
       }
+
+      document.getElementById('possible-numbers').innerHTML = `可能的数字范围：${possibleNumbers}`;
     }
   </script>
 </body>
