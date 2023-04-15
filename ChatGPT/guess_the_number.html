@@ -67,6 +67,12 @@
       font-size: 20px;
       margin-top: 20px;
     }
+
+    #warning {
+      color: red;
+      font-size: 16px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -80,6 +86,7 @@
   <p id="guesses-left"></p>
   <ul id="history"></ul>
   <p id="possible-numbers"></p>
+  <p id="warning"></p>
 
   <script>
     let secretNumber = Math.floor(Math.random() * 100) + 1; // 生成1到100之间的随机数
@@ -90,8 +97,8 @@
 
     function checkGuess() {
       let guess = Number(document.getElementById('guess').value);
-      if (guess < 1 || guess > 100 || isNaN(guess)) {
-        alert('请输入1到100之间的数字！');
+      if (guess < 1 || guess > 100 || isNaN(guess) || !isNumberInPossibleRange(guess)) {
+        document.getElementById('warning').innerHTML = `请输入${possibleNumbers}之间的数字！`;
         return;
       }
 
@@ -124,6 +131,14 @@
       }
 
       document.getElementById('possible-numbers').innerHTML = `可能的数字范围：${possibleNumbers}`;
+      document.getElementById('warning').innerHTML = '';
+    }
+
+    function isNumberInPossibleRange(num) {
+      let range = possibleNumbers.split('-');
+      let min = Number(range[0]);
+      let max = Number(range[1]);
+      return num >= min && num <= max;
     }
   </script>
 </body>
