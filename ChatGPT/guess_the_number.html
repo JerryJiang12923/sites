@@ -81,11 +81,11 @@
   <br>
   <button type="button" onclick="checkGuess()">猜一猜</button>
   <br>
+  <p id="warning"></p>
   <p id="result"></p>
   <p id="guesses-left"></p>
-  <ul id="history"></ul>
   <p id="possible-numbers"></p>
-  <p id="warning"></p>
+  <ul id="history"></ul>
 
   <script>
     let secretNumber = Math.floor(Math.random() * 1000) + 1; // 生成1到1000之间的随机数
