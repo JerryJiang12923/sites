@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const canvas = document.createElement("canvas");
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext("2d");
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const emojiArray = ["🤡", "🤡", "🤡", "🤡", "🤡", "🤡", "🤡", "🤡", "🤡", "🤡"];
+
+      function createEmoji() {
+        const emoji = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 30 + 10;
+
+        ctx.font = size + "px serif";
+        ctx.fillText(emoji, x, y);
+      }
+
+      function createExplosion() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < 100; i++) {
+          createEmoji();
+        }
+      }
+
+      setTimeout(function() {
+        const explosionInterval = setInterval(function() {
+          createExplosion();
+        }, 100);
+
+        setTimeout(function() {
+          clearInterval(explosionInterval);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.font = "40px serif";
+          ctx.textAlign = "center";
+          ctx.fillText("你的钓鱼邮件测试失败了", canvas.width / 2, canvas.height / 2);
+        }, 4000);
+      }, 2000);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
