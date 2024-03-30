@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>随机数生成器</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+		h1 {
+			text-align: center;
+			margin-top: 50px;
+			color: #333;
+		}
+		form {
+			width: 400px;
+			margin: 0 auto;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+			color: #333;
+		}
+		input[type="number"], input[type="text"] {
+			padding: 5px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			font-size: 16px;
+			width: 100%;
+		}
+		button {
+			display: block;
+			margin: 20px auto;
+			padding: 10px;
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			border-radius: 3px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		.result {
+			margin-top: 20px;
+			color: #333;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+			text-align: center;
+		}
+		.excluded {
+			margin-top: 10px;
+			background-color: #f2f2f2;
+			padding: 10px;
+			border-radius: 5px;
+		}
+		.decimal {
+			display: none;
+		}
+	</style>
+	<script>
+		function showDecimal() {
+			if (document.getElementById("decimal").checked) {
+				document.getElementById("decimalPlaces").style.display = "block";
+			} else {
+				document.getElementById("decimalPlaces").style.display = "none";
+			}
+		}
+
+		function generateRandomNumbers() {
+			var min = parseFloat(document.getElementById("min").value);
+			var max = parseFloat(document.getElementById("max").value);
+			var num = parseInt(document.getElementById("num").value);
+			var excluded = document.getElementById("excluded").value.split(",");
+			var unique = document.getElementById("unique").checked;
+			var decimal = document.getElementById("decimal").checked;
+			var decimalPlaces = decimal ? parseInt(document.getElementById("decimalPlaces").value) : 0;
+			var result = "";
+			var randomNumbers = [];
+			while (randomNumbers.length < num) {
+				var randomNumber;
+				if (decimal) {
+					randomNumber = (Math.random() * (max - min) + min).toFixed(decimalPlaces);
+				} else {
+					randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+				}
+				if (excluded.indexOf(randomNumber.toString()) === -1 && (!unique || randomNumbers.indexOf(randomNumber) === -1)) {
+					randomNumbers.push(randomNumber);
+				}
+			}
+			for (var j = 0; j < num; j++) {
+				result += randomNumbers[j] + " ";
+			}
+			document.getElementById("result").innerHTML = result;
+		}
+	</script>
+</head>
+<body>
+	<h1>随机数生成器</h1>
+	<form>
+		<label for="min">最小值：</label>
+		<input type="number" id="min" value="0">
+		<label for="max">最大值：</label>
+		<input type="number" id="max" value="100">
+		<label for="num">生成数量：</label>
+		<input type="number" id="num" value="1">
+		<label for="excluded">排除数（用逗号分隔）：</label>
+		<input type="text" id="excluded">
+		<label for="unique">唯一数字：</label>
+		<input type="checkbox" id="unique">
+		<label for="decimal">生成小数：</label>
+		<input type="checkbox" id="decimal" onclick="showDecimal()">
+		<div class="decimal" id="decimalPlaces">
+			<label for="places">小数位数：</label>
+			<input type="number" id="places" value="2">
+		</div>
+		<button type="button" onclick="generateRandomNumbers()">生成随机数</button>
+	</form>
+	<div class="excluded">
+		<p>已排除的数：</p>
+		<p id="excludedNumbers"></p>
+	</div>
+	<div class="result" id="result"></div>
+	<script>
+		document.getElementById("excluded").addEventListener("input", function() {
+			var excluded = this.value.split(",");
+			var excludedNumbers = "";
+			for (var i = 0; i < excluded.length; i++) {
+				if (excluded[i].trim() !== "") {
+					excludedNumbers += excluded[i].trim() + ", ";
+				}
+			}
+			document.getElementById("excludedNumbers").innerHTML = excludedNumbers.slice(0, -2);
+		});
+	</script>
+</body>
+</html>
