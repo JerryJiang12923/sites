@@ -82,6 +82,10 @@
 			var decimalPlaces = decimal ? parseInt(document.getElementById("decimalPlaces").value) : 0;
 			var result = "";
 			var randomNumbers = [];
+		    if (unique && !decimal && num > max - min + 1 - excluded.length) {
+        		alert("所需的唯一数字数量超过了可用的数字范围！");
+        		return;
+    		}
 			while (randomNumbers.length < num) {
 				var randomNumber;
 				if (decimal) {
