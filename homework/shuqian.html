@@ -55,6 +55,12 @@
             font-style: italic;
         }
 
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 40px;
+        }
+
         /* Responsive Styles */
         @media (max-width: 600px) {
             body {
@@ -86,19 +92,14 @@
             font-size: 10px;
             }
         }
-            color: #999;
-        }
 
-        audio {
-            width: 100%;
-            margin-top: 15px;
-        }
+   
     </style>
 </head>
 <body>
     <h1>为你解签</h1>
 
-    <audio controls autoplay>
+    <audio controls autoplay height="100" width="100">
         <source src="jane-eyre.mp3" type="audio/mpeg">
         <source src="jane-eyre.ogg" type="audio/ogg">
         <embed height="50" width="100" src="jane-eyre.mp3">
