@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>书籍介绍</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-fz-kai-z-03-regular/font.css"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-fz-fang-song-z-02-s-regular/font.css"></link>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,22 +15,25 @@
 
         h1 {
             color: #333;
-            font-size: 26px;
+            font-family: Roboto, "FZFangSong-Z02S", sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
+        
         blockquote {
-            font-family: KaiTi, serif;
+            font-family: Roboto, "FZKai-Z03", sans-serif;
             color: #666;
-            font-size: 17px;
+            font-size: clamp(1.5rem, 2vw, 2.5rem);
             margin-bottom: 20px;
             border-left: 4px solid #ccc;
             padding-left: 10px;
         }
 
         p {
-            font-family: SimSun, serif;
-            font-size: 18px;
+            font-family: Roboto, "FZFangSong-Z02S", sans-serif;
+            font-size: clamp(1.5rem, 2vw, 2.5rem);
             line-height: 1.5;
             margin-bottom: 20px;
             margin-left: 20px;
@@ -43,7 +48,11 @@
         }
 
         footer p {
-            font-size: 14px;
+            font-size: 18px;
+        }
+
+        .quote-author {
+            font-style: italic;
         }
 
         /* Responsive Styles */
@@ -85,7 +94,6 @@
             margin-top: 15px;
         }
     </style>
-    </style>
 </head>
 <body>
     <h1>为你解签</h1>
@@ -95,7 +103,7 @@
         <source src="jane-eyre.ogg" type="audio/ogg">
         <embed height="50" width="100" src="jane-eyre.mp3">
     </audio>
-    
+
     <blockquote>
         “可是你会有的。”
         <br><br>
