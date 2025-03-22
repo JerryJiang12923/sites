@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thanks for Listening</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            background: #000;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            z-index: 1;
+        }
+        h1 {
+            font-size: 4em;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .link {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .link:hover {
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="content">
+        <h1>Thanks for Listening</h1>
+    </div>
+    <a href="https://www.baidu.com" target="_blank" class="link">Click Me to Access BAIDU</a>
+
+    <script>
+        // 烟花动画代码
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
+                };
+                this.alpha = 1;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            
+            update() {
+                this.draw();
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        const particles = [];
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, index) => {
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                } else {
+                    particle.update();
+                }
+            });
+            
+            // 每隔1秒创建新的烟花
+            if (Math.random() < 0.03) {
+                createFirework();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        animate();
+    </script>
+</body>
+</html>
