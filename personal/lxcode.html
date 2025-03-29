@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>灵犀验证系统 v2</title>
+    <title>灵犀验证系统 v3</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
         .form-group { margin-bottom: 1.5rem; }
@@ -134,16 +134,12 @@
                     return num.toString().padStart(3, '0');
                 }).join('');
 
-                // 增加随机因素
-                const timestamp = new Date().toISOString();
-                const randomSalt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
-                    .map(b => b.toString(16).padStart(2, '0')).join('');
-                const rawStr = `${inputs.name}-${inputs.jh}-${inputs.sh}-${timestamp}-${randomSalt}-MadebyJerry`;
+                const rawStr = `${inputs.name}-${inputs.jh}-${inputs.sh}-MadebyJerry`;
                 const base64Data = btoa(unescape(encodeURIComponent(rawStr)));
 
                 // 密钥派生
                 const enc = new TextEncoder();
-                const salt = enc.encode(`${document.getElementById('morse').value}-${pageNumbers}-${inputs.name}-${randomSalt}`);
+                const salt = enc.encode(`${document.getElementById('morse').value}-${pageNumbers}-${inputs.name}`);
 
                 const baseKey = await crypto.subtle.importKey(
                     "raw",
@@ -166,8 +162,8 @@
                     ["encrypt"]
                 );
 
-                // 加密与哈希
-                const iv = crypto.getRandomValues(new Uint8Array(12));
+                // 使用固定的 IV
+                const iv = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]); // 12 字节的固定 IV
                 const encrypted = await crypto.subtle.encrypt(
                     { name: "AES-GCM", iv },
                     aesKey,
@@ -181,9 +177,8 @@
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-                // 添加时间戳和有效期信息
                 const resultData = {
-                    code: hashHex,
+                    lxcode: hashHex,
                 };
 
                 document.getElementById('result').textContent = JSON.stringify(resultData);
