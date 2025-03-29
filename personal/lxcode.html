@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵犀验证系统 v2</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; color: #333; }
+        input { width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 4px; }
+        button { background: #2196F3; color: white; padding: 1rem 2rem; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background: #90CAF9; cursor: not-allowed; }
+        #result { word-break: break-all; margin-top: 1rem; padding: 1rem; background: #f5f5f5; }
+        .hint { font-size: 0.9rem; color: #666; margin-top: 0.3rem; }
+        .morse-group { display: flex; gap: 1rem; }
+        .morse-group > div { flex: 1; }
+    </style>
+</head>
+<body>
+    <h1>灵犀验证系统</h1>
+    
+    <div class="form-group">
+        <label>完整姓名：</label>
+        <input type="text" id="name" autocomplete="off" placeholder="如：张三" maxlength="4">
+    </div>
+
+    <div class="form-group">
+        <label>初中学号：</label>
+        <input type="text" id="jh" autocomplete="off" placeholder="如：504" maxlength="4">
+    </div>
+
+    <div class="form-group">
+        <label>高中学号：</label>
+        <input type="text" id="sh" autocomplete="off" placeholder="如：205" maxlength="4">
+    </div>
+
+    <div class="form-group morse-group">
+        <div>
+            <label>姓名首字母：</label>
+            <input type="text" id="initials" autocomplete="off" placeholder="如：ZS" maxlength="5">
+            <div class="hint">大写字母，无空格（例：张三→ZS）</div>
+        </div>
+        <div>
+            <label>自动生成摩尔斯码：</label>
+            <input type="text" id="morse" autocomplete="off" readonly>
+            <div class="hint">自动生成字段，无需编辑</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>字典页码（逗号分隔）：</label>
+        <input type="text" id="pages" autocomplete="off" placeholder="如：123,045">
+        <div class="hint">按姓名每个字的字典页码，使用半角逗号分隔（例：123,045）</div>
+    </div>
+
+    <button onclick="generate()" id="submitBtn">生成灵犀码</button>
+    <div id="result"></div>
+
+    <script>
+        // 摩尔斯码字典
+        const morseCode = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+            'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+            'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+            'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+            'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+            'Z': '--..'
+        };
+
+        // 自动生成摩尔斯码
+        document.getElementById('initials').addEventListener('input', function(e) {
+            const raw = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            e.target.value = raw; // 强制大写且仅保留字母
+            document.getElementById('morse').value = 
+                raw.split('').map(c => morseCode[c] || '').join(' ');
+        });
+
+        // 安全控制
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('paste', e => e.preventDefault());
+            input.addEventListener('copy', e => e.preventDefault());
+            if (input.id === 'jh' || input.id === 'sh') {
+                input.addEventListener('input', e => {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+            }
+        });
+
+        async function doubleHash(data) {
+            const firstHash = await crypto.subtle.digest("SHA-256", data);
+            return await crypto.subtle.digest("SHA-384", firstHash);
+        }
+
+        async function generate() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            setTimeout(() => btn.disabled = false, 30000);
+
+            try {
+                // 输入验证
+                const inputs = {
+                    name: document.getElementById('name').value.trim(),
+                    jh: document.getElementById('jh').value.trim(),
+                    sh: document.getElementById('sh').value.trim(),
+                    initials: document.getElementById('initials').value,
+                    pages: document.getElementById('pages').value.trim()
+                };
+
+                if (Object.values(inputs).some(v => !v)) {
+                    throw new Error('所有字段必须填写');
+                }
+                if (!/^[A-Z]{2,}$/.test(inputs.initials)) {
+                    throw new Error('首字母需2位以上大写字母');
+                }
+                if (!/^[\u4e00-\u9fa5]{2,4}$/.test(inputs.name)) {
+                    throw new Error('姓名必须是2-4个汉字');
+                }
+                if (!/^\d{1,4}$/.test(inputs.jh) || !/^\d{1,4}$/.test(inputs.sh)) {
+                    throw new Error('学号必须是1-4位数字');
+                }
+
+                // 页码验证
+                const pageArray = inputs.pages.split(',');
+                if (pageArray.length !== inputs.name.length) {
+                    throw new Error('页码数量必须与姓名字数相同');
+                }
+
+                // 处理页码
+                const pageNumbers = inputs.pages.split(',').map(p => {
+                    const num = parseInt(p.trim());
+                    if (isNaN(num)) throw new Error('页码必须为数字');
+                    return num.toString().padStart(3, '0');
+                }).join('');
+
+                // 增加随机因素
+                const timestamp = new Date().toISOString();
+                const randomSalt = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                    .map(b => b.toString(16).padStart(2, '0')).join('');
+                const rawStr = `${inputs.name}-${inputs.jh}-${inputs.sh}-${timestamp}-${randomSalt}-MadebyJerry`;
+                const base64Data = btoa(unescape(encodeURIComponent(rawStr)));
+
+                // 密钥派生
+                const enc = new TextEncoder();
+                const salt = enc.encode(`${document.getElementById('morse').value}-${pageNumbers}-${inputs.name}-${randomSalt}`);
+
+                const baseKey = await crypto.subtle.importKey(
+                    "raw",
+                    enc.encode(base64Data),
+                    { name: "PBKDF2" },
+                    false,
+                    ["deriveKey"]
+                );
+
+                const aesKey = await crypto.subtle.deriveKey(
+                    {
+                        name: "PBKDF2",
+                        salt,
+                        iterations: 250000, // 增加迭代次数
+                        hash: "SHA-256"
+                    },
+                    baseKey,
+                    { name: "AES-GCM", length: 256 },
+                    false,
+                    ["encrypt"]
+                );
+
+                // 加密与哈希
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: "AES-GCM", iv },
+                    aesKey,
+                    enc.encode(base64Data)
+                );
+
+                // 使用双重哈希
+                const hashBuffer = await doubleHash(new Uint8Array([...new Uint8Array(encrypted), ...iv]));
+
+                // 转换为十六进制
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                // 添加时间戳和有效期信息
+                const resultData = {
+                    code: hashHex,
+                };
+
+                document.getElementById('result').textContent = JSON.stringify(resultData);
+            } catch (err) {
+                alert(`操作失败：${err.message}`);
+                btn.disabled = false;
+            }
+        }
+
+        // 检测开发者工具
+        (function() {
+            const devtools = {
+                isOpen: false,
+                orientation: undefined
+            };
+            const threshold = 160;
+
+            setInterval(() => {
+                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+                if (widthThreshold || heightThreshold) {
+                    if (!devtools.isOpen) {
+                        devtools.isOpen = true;
+                        alert('请不要打开开发者工具！');
+                    }
+                } else {
+                    devtools.isOpen = false;
+                }
+            }, 1000);
+        })();
+    </script>
+</body>
+</html>
