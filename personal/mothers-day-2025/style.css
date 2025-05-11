@@ -58,7 +58,7 @@ p {
 
 .hero-image {
     max-width: 100%;
-    width: 350px;
+    width: 400px;
     height: auto;
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
@@ -166,12 +166,12 @@ p {
     position: absolute;
     left: 50%;
     bottom: 0; /* Start from button-ish area */
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     opacity: 0;
     background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23ff4d6d%22%3E%3Cpath%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat;
-    animation: floatUp 3s ease-out forwards;
+    animation: floatUp 4s ease-out forwards;
 }
 
 @keyframes floatUp {
