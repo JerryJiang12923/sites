@@ -1,0 +1,277 @@
+/* General Body Styles */
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fdfcfa; /* Soft off-white/cream */
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevents horizontal scrollbar if animations are slightly off */
+}
+
+.page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Typography */
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+    color: #d18a9b; /* Soft rose pink for headings */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.8em;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 2.2em;
+    margin-top: 50px; /* Space above section titles */
+}
+
+p {
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.hero-image {
+    max-width: 100%;
+    width: 350px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+/* Gallery Section */
+.gallery-section {
+    padding: 40px 0;
+}
+
+.photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Increased gap */
+    padding: 20px 0;
+}
+
+.photo-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    overflow: hidden; /* Ensures image corners are rounded with the container */
+    width: calc(50% - 20px); /* Two items per row on larger screens, accounting for gap */
+    max-width: 280px; /* Max width for each item */
+    text-align: center;
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1 / 1; /* Makes images square */
+    object-fit: cover; /* Ensures image covers the area, might crop */
+}
+
+.photo-item .caption {
+    font-size: 0.9em;
+    color: #666;
+    padding: 10px;
+    margin: 0;
+    min-height: 40px; /* To align items even if captions differ in length */
+}
+
+/* SVIP Section */
+.svip-section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.svip-card-image {
+    max-width: 100%;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    display: block;
+}
+
+.svip-section p {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Extra Section */
+.extra-section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+#hugButton {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ff8fab; /* Brighter Pink for the button */
+    color: white;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 25px; /* More rounded */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+}
+
+#hugButton:hover {
+    background-color: #ff69b4; /* Darker pink */
+    transform: translateY(-2px);
+}
+
+#hugButton:active {
+    transform: translateY(0);
+}
+
+#hugAnimationContainer {
+    position: relative;
+    height: 100px; /* Adjust if needed for animation */
+    margin-bottom: 20px;
+    overflow: hidden; /* Keep hearts contained if they fly too far */
+}
+
+.heart {
+    position: absolute;
+    left: 50%;
+    bottom: 0; /* Start from button-ish area */
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23ff4d6d%22%3E%3Cpath%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    animation: floatUp 3s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) translateX(-50%) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-150px) translateX(-50%) scale(1.2); /* Move further up */
+        opacity: 0;
+    }
+}
+
+.love-notes {
+    margin-top: 30px;
+    background-color: #fff5f8; /* Very light pink background */
+    padding: 20px;
+    border-radius: 8px;
+    display: inline-block; /* So it doesn't take full width */
+    text-align: left;
+}
+
+.love-notes p {
+    text-align: left;
+    font-weight: bold;
+    color: #c97b8c; /* Darker shade of heading pink */
+}
+.love-notes ul {
+    list-style-type: '♡ '; /* Cute heart bullets */
+    padding-left: 25px;
+}
+.love-notes li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+}
+
+footer p {
+    font-size: 0.95em;
+    color: #777;
+    margin-bottom: 5px;
+}
+.date-info {
+    font-size: 0.8em;
+    color: #999;
+}
+
+/* Scroll Animation Classes */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(40px); /* Start slightly lower */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.2em;
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    .photo-item {
+        width: calc(100% - 20px); /* Full width on smaller screens */
+        max-width: 320px; /* Still control max width */
+    }
+}
+
+@media (max-width: 480px) {
+    .page-container {
+        padding: 10px;
+    }
+    .hero-image {
+        width: 280px;
+    }
+    .svip-card-image {
+        width: 250px;
+    }
+    .photo-item {
+        width: 100%; /* Full width */
+    }
+     #hugButton {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .love-notes ul {
+        padding-left: 20px; /* Adjust for smaller screens */
+    }
+}
