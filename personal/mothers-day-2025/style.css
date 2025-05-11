@@ -3,7 +3,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ffeef0; /* Soft off-white/cream */
+    background-color: #fdfcfa; /* Soft off-white/cream */
     color: #333;
     line-height: 1.6;
     overflow-x: hidden; /* Prevents horizontal scrollbar if animations are slightly off */
