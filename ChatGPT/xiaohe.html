@@ -9,127 +9,138 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root {
-            --primary-color: #007bff;
-            --primary-color-light: rgba(0, 123, 255, 0.25);
-            --secondary-color: #6c757d;
-            --light-gray: #f8f9fa;
-            --medium-gray: #dee2e6;
-            --text-color: #212529;
-            --white: #ffffff;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --border-radius: 8px;
-        }
-        body {
-            font-family: 'Noto Sans SC', system-ui, sans-serif;
-            background-color: var(--light-gray);
-            color: var(--text-color);
-            line-height: 1.7;
-            display: flex;
-            justify-content: center;
-            
-            /* --- 关键修改点 --- */
-            /* 将 align-items 从 center 改为 flex-start */
-            align-items: flex-start; 
-            
-            min-height: 100vh;
-            margin: 0;
-            padding: 40px 20px; /* 增加顶部padding，替代居中效果 */
-            box-sizing: border-box; /* 确保padding计算在内 */
-        }
-        .container {
-            width: 100%;
-            max-width: 700px;
-            background-color: var(--white);
-            padding: 30px 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            font-weight: 700;
-            margin-bottom: 15px;
-            margin-top: 0; /* 减少h1上方的默认边距 */
-        }
-        
-        /* Toggle Switch Styles */
-        .switch-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 15px;
-            font-size: 1em;
-            color: var(--secondary-color);
-            font-weight: 500;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 28px;
-        }
-        .switch input { display: none; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 28px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(22px); }
+<style>
+    :root {
+        --primary-color: #007bff;
+        --primary-color-light: rgba(0, 123, 255, 0.2);
+        --secondary-color: #6c757d;
+        --light-gray: #f8f9fa;
+        --medium-gray: #dee2e6;
+        --text-color: #212529;
+        --white: #ffffff;
+        --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        --border-radius: 12px;
+    }
 
-        .converter { display: flex; flex-direction: column; gap: 20px; }
-        label { font-weight: 500; color: #495057; font-size: 0.9em; }
-        textarea, #output {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--medium-gray);
-            border-radius: var(--border-radius);
-            font-size: 1.2em;
-            box-sizing: border-box;
-            transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            will-change: outline, border-color;
-        }
-        textarea:focus {
-            border-color: var(--primary-color);
-            outline: 3px solid var(--primary-color-light); 
-            outline-offset: 1px;
-        }
-        #output {
-            min-height: 60px;
-            background-color: var(--light-gray);
-            color: var(--primary-color);
-            font-weight: 500;
-            word-spacing: 8px;
-            letter-spacing: 0.5px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.8em;
-            color: #aaa;
-        }
-    </style>
+    /* --- 全局重置和布局基础 --- */
+    html {
+        box-sizing: border-box; /* 1. 解决滚动条问题的核心 */
+    }
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    body {
+        font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--light-gray);
+        color: var(--text-color);
+        line-height: 1.6;
+        margin: 0;
+        
+        display: flex;
+        justify-content: center; /* 水平居中 */
+        align-items: flex-start; /* 2. 垂直方向从顶部开始，解决“离顶上太远”的问题 */
+        
+        min-height: 100vh;
+        padding: 5vh 20px; /* 顶部留出 5% 视窗高度的间距，左右留出20px */
+    }
+
+    /* --- 主容器卡片 --- */
+    .container {
+        width: 100%;
+        max-width: 680px;
+        background-color: var(--white);
+        padding: 35px 40px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+
+    h1 {
+        text-align: center;
+        color: var(--text-color);
+        font-weight: 700;
+        margin-top: 0; /* 移除标题默认的上边距 */
+        margin-bottom: 20px;
+    }
+    
+    /* --- 切换开关 --- */
+    .switch-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 12px;
+        font-size: 1em;
+        color: var(--secondary-color);
+        font-weight: 500;
+        user-select: none; /* 防止意外选中文本 */
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+    }
+    .switch input { display: none; }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0; /* 等同于 top/left/right/bottom: 0 */
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 28px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 增加一点回弹效果 */
+        border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary-color); }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    /* --- 输入/输出区域 --- */
+    .converter { display: flex; flex-direction: column; gap: 25px; }
+    label { font-weight: 500; color: #495057; font-size: 0.9em; display: block; margin-bottom: 8px; }
+    textarea, #output {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid var(--medium-gray);
+        border-radius: 8px; /* 稍微减小圆角，更精致 */
+        font-size: 1.15em;
+        transition: border-color 0.2s, outline 0.2s;
+    }
+    textarea {
+        resize: vertical;
+        min-height: 110px;
+        will-change: outline, border-color;
+    }
+    textarea:focus-visible { /* 使用 focus-visible 提升可访问性 */
+        border-color: var(--primary-color);
+        outline: 3px solid var(--primary-color-light); 
+        outline-offset: 2px;
+    }
+    #output {
+        min-height: 60px;
+        background-color: var(--light-gray);
+        color: var(--primary-color);
+        font-weight: 500;
+        word-spacing: 8px;
+    }
+
+    /* --- 页脚 --- */
+    .footer {
+        text-align: center;
+        margin-top: 35px;
+        font-size: 0.85em;
+        color: #b0b0b0;
+    }
+</style>
 </head>
 <body>
 
