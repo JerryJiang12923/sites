@@ -28,10 +28,15 @@
             line-height: 1.7;
             display: flex;
             justify-content: center;
-            align-items: center;
+            
+            /* --- 关键修改点 --- */
+            /* 将 align-items 从 center 改为 flex-start */
+            align-items: flex-start; 
+            
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px; /* 增加顶部padding，替代居中效果 */
+            box-sizing: border-box; /* 确保padding计算在内 */
         }
         .container {
             width: 100%;
@@ -46,6 +51,7 @@
             color: var(--text-color);
             font-weight: 700;
             margin-bottom: 15px;
+            margin-top: 0; /* 减少h1上方的默认边距 */
         }
         
         /* Toggle Switch Styles */
