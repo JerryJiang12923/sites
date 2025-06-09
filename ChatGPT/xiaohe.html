@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小鹤双拼/全拼转换器</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-color-light: rgba(0, 123, 255, 0.25);
+            --secondary-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --medium-gray: #dee2e6;
+            --text-color: #212529;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 8px;
+        }
+        body {
+            font-family: 'Noto Sans SC', system-ui, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background-color: var(--white);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        /* Toggle Switch Styles */
+        .switch-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+            font-size: 1em;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .switch input { display: none; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .converter { display: flex; flex-direction: column; gap: 20px; }
+        label { font-weight: 500; color: #495057; font-size: 0.9em; }
+        textarea, #output {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            will-change: outline, border-color;
+        }
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: 3px solid var(--primary-color-light); 
+            outline-offset: 1px;
+        }
+        #output {
+            min-height: 60px;
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+            font-weight: 500;
+            word-spacing: 8px;
+            letter-spacing: 0.5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>小鹤双拼转换器</h1>
+    <div class="switch-container">
+        <span id="mode-label-1">双拼</span>
+        <label class="switch">
+            <input type="checkbox" id="mode-toggle">
+            <span class="slider"></span>
+        </label>
+        <span id="mode-label-2">全拼</span>
+    </div>
+
+    <div class="converter">
+        <div>
+            <label id="input-label" for="input">输入小鹤双拼码：</label>
+            <textarea id="input" rows="4"></textarea>
+        </div>
+        <div>
+            <label id="output-label" for="output">全拼结果</label>
+            <div id="output"></div>
+        </div>
+    </div>
+        <div class="footer">
+        <p>@JerryJiang12923</p>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const inputEl = document.getElementById('input');
+    const outputEl = document.getElementById('output');
+    const modeToggle = document.getElementById('mode-toggle');
+    const inputLabel = document.getElementById('input-label');
+    const outputLabel = document.getElementById('output-label');
+    const modeLabel1 = document.getElementById('mode-label-1');
+    const modeLabel2 = document.getElementById('mode-label-2');
+
+    // --- State ---
+    let currentMode = 'shuangpinToPinyin'; // or 'pinyinToShuangpin'
+
+    // --- Xiaohe Shuangpin Scheme Definition ---
+    const initialsMap = { 'u': 'sh', 'i': 'ch', 'v': 'zh' };
+    const finalsMap = {
+        'a': 'a', 'b': 'in', 'c': 'ao', 'd': 'ai', 'e': 'e', 'f': 'en', 'g': 'eng', 'h': 'ang',
+        'i': 'i', 'j': 'an', 'k': ['uai', 'ing'], 'l': ['uang', 'iang'], 'm': 'ian', 'n': 'iao',
+        'o': ['uo', 'o'], 'p': 'ie', 'q': 'iu', 'r': 'uan', 's': ['ong', 'iong'], 't': ['ue', 'üe'],
+        'u': 'u', 'v': ['ui', 'ü'], 'w': 'ei', 'x': ['ua', 'ia'], 'y': 'un', 'z': 'ou'
+    };
+    const pinyinSyllables = new Set(['a','o','e','er','b','ba','bo','bai','bei','bao','ban','ben','bang','beng','bi','bie','biao','bian','bin','bing','bu','p','pa','po','pai','pao','pou','pan','pen','pei','pang','peng','pi','pie','piao','pian','pin','ping','pu','m','ma','mo','me','mai','mao','mou','man','men','mei','mang','meng','mi','mie','miao','miu','mian','min','ming','mu','f','fa','fo','fei','fou','fan','fen','fang','feng','fu','d','da','de','dai','dei','dao','dou','dan','dang','den','deng','di','die','diao','diu','dian','ding','dong','du','duan','dun','dui','duo','t','ta','te','tai','tao','tou','tan','tang','teng','ti','tie','tiao','tian','ting','tong','tu','tuan','tun','tui','tuo','n','na','ne','nai','nei','nao','nou','nan','nen','nang','neng','ni','nie','niao','niu','nian','nin','niang','ning','nong','nu','nuan','nun','nuo','nü','nüe','l','la','le','lo','lai','lei','lao','lou','lan','lang','leng','li','lia','lie','liao','liu','lian','lin','liang','ling','long','lu','luo','luan','lun','lü','lüe','g','ga','ge','gai','gei','gao','gou','gan','gen','gang','geng','gong','gu','gua','guai','guan','guang','gui','guo','k','ka','ke','kai','kao','kou','kan','ken','kang','keng','kong','ku','kua','kuai','kuan','kuang','kui','kun','kuo','h','ha','he','hai','han','hei','hao','hou','hen','hang','heng','hong','hu','hua','huai','huan','hui','huo','hun','huang','j','ji','jia','jie','jiao','jiu','jian','jin','jiang','jing','jiong','ju','juan','jun','jue','q','qi','qia','qie','qiao','qiu','qian','qin','qiang','qing','qiong','qu','quan','qun','que','x','xi','xia','xie','xiao','xiu','xian','xin','xiang','xing','xiong','xu','xuan','xun','xue','zh','zha','zhe','zhi','zhai','zhao','zhou','zhan','zhen','zhang','zheng','zhong','zhu','zhua','zhuai','zhuan','zhuang','zhun','zhui','zhuo','ch','cha','che','chi','chai','chao','chou','chan','chen','chang','cheng','chong','chu','chua','chuai','chuan','chuang','chun','chui','chuo','sh','sha','she','shi','shai','shao','shou','shan','shen','shang','sheng','shu','shua','shuai','shuan','shuang','shun','shui','shuo','r','re','ri','rao','rou','ran','ren','rang','reng','rong','ru','rui','ruan','run','ruo','z','za','ze','zi','zai','zao','zan','zou','zang','zei','zen','zeng','zong','zu','zuan','zun','zui','zuo','c','ca','ce','ci','cai','cao','cou','can','cen','cang','ceng','cong','cu','cuan','cun','cui','cuo','s','sa','se','si','sai','sao','sou','san','sen','sang','seng','song','su','suan','sun','sui','suo','y','ya','ye','yo','yao','you','yan','yang','yi','yin','yun','ying','yong','yu','yue','yuan','w','wa','wo','wai','wei','wan','wen','wang','weng','wu']);
+
+    // --- Reverse Maps (Generated automatically) ---
+    const reverseInitialsMap = {};
+    for (const key in initialsMap) { reverseInitialsMap[initialsMap[key]] = key; }
+    
+    const reverseFinalsMap = {};
+    for (const key in finalsMap) {
+        const value = finalsMap[key];
+        if (Array.isArray(value)) {
+            value.forEach(v => reverseFinalsMap[v] = key);
+        } else {
+            reverseFinalsMap[value] = key;
+        }
+    }
+    
+    // --- Conversion Logic: Xiaohe -> Pinyin ---
+    function shuangpinToPinyin(shuangpin) {
+        let result = [];
+        let i = 0;
+        while (i < shuangpin.length) {
+            if (i + 1 < shuangpin.length) {
+                const c1 = shuangpin[i];
+                const c2 = shuangpin[i + 1];
+                let initial = initialsMap[c1] || c1;
+                let final = resolveAmbiguousFinal(initial, c2);
+                if (!final) { result.push(c1); i++; continue; }
+                
+                if (['j', 'q', 'x', 'y'].includes(initial) && final.startsWith('ü')) final = final.replace('ü', 'u');
+                const potentialPinyin = (['a', 'o', 'e'].includes(c1)) ? final : initial + final;
+
+                if (pinyinSyllables.has(potentialPinyin)) {
+                    result.push(potentialPinyin); i += 2; continue;
+                }
+            }
+            result.push(shuangpin[i]); i++;
+        }
+        return result.join(' ');
+    }
+    function resolveAmbiguousFinal(initial, finalKey) {
+        const finalOptions = finalsMap[finalKey]; if (!Array.isArray(finalOptions)) return finalOptions;
+        switch (finalKey) {
+            case 's': return ['j', 'q', 'x'].includes(initial) ? 'iong' : 'ong';
+            case 'k': return ['g','k','h','zh','ch','sh','r','z','c','s'].includes(initial) ? 'uai' : 'ing';
+            case 'l': return ['j','q','x','y'].includes(initial) ? 'iang' : 'uang';
+            case 'x': return ['j','q','x','y'].includes(initial) ? 'ia' : 'ua';
+            case 't': return ['j','q','x','y','n','l'].includes(initial) ? 'üe' : 'ue';
+            case 'v': return ['n','l','j','q','x','y'].includes(initial) ? 'ü' : 'ui';
+            case 'o': return ['b','p','m','f'].includes(initial) ? 'o' : 'uo';
+            default: return finalOptions[0];
+        }
+    }
+
+    // --- Conversion Logic: Pinyin -> Xiaohe ---
+    function pinyinToShuangpin(pinyinStr) {
+        const pinyinArray = pinyinStr.trim().split(/\s+/);
+        return pinyinArray.map(pinyin => {
+            if (!pinyinSyllables.has(pinyin)) return pinyin;
+            if (pinyin === 'er') return 'er'; // special case
+
+            const { initial, final } = parsePinyin(pinyin);
+
+            if (initial === 'zero') { // Zero-initial syllables
+                const firstVowel = pinyin.match(/^[aeo]/)?.[0] || '';
+                const finalKey = reverseFinalsMap[final];
+                if (firstVowel && finalKey) {
+                    return firstVowel + finalKey;
+                }
+            } else { // Syllables with initials
+                const initialKey = reverseInitialsMap[initial] || initial;
+                const finalKey = reverseFinalsMap[final];
+                if (initialKey && finalKey) {
+                    return initialKey + finalKey;
+                }
+            }
+            return pinyin; // Fallback
+        }).join(' ');
+    }
+
+    function parsePinyin(pinyin) {
+        const initials = ['zh', 'ch', 'sh', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 'j', 'q', 'x', 'r', 'z', 'c', 's', 'y', 'w'];
+        for (const i of initials) {
+            if (pinyin.startsWith(i)) {
+                return { initial: i, final: pinyin.substring(i.length) };
+            }
+        }
+        return { initial: 'zero', final: pinyin };
+    }
+
+    // --- Main Controller ---
+    function convert() {
+        const inputText = inputEl.value.toLowerCase();
+        if (currentMode === 'shuangpinToPinyin') {
+            const cleanInput = inputText.replace(/[^a-z]/g, '');
+            outputEl.textContent = shuangpinToPinyin(cleanInput);
+        } else {
+            const cleanInput = inputText.replace(/[^a-z\s]/g, '');
+            outputEl.textContent = pinyinToShuangpin(cleanInput);
+        }
+    }
+
+    function updateUI() {
+        inputEl.value = '';
+        outputEl.textContent = '';
+
+        if (modeToggle.checked) { // Pinyin to Shuangpin
+            currentMode = 'pinyinToShuangpin';
+            modeLabel1.style.color = 'var(--secondary-color)';
+            modeLabel2.style.color = 'var(--text-color)';
+            inputLabel.textContent = '输入全拼： (用空格隔开)';
+            outputLabel.textContent = '小鹤双拼结果';
+            inputEl.placeholder = '例如: xiao he shuang pin';
+        } else { // Shuangpin to Pinyin
+            currentMode = 'shuangpinToPinyin';
+            modeLabel1.style.color = 'var(--text-color)';
+            modeLabel2.style.color = 'var(--secondary-color)';
+            inputLabel.textContent = '输入小鹤双拼：';
+            outputLabel.textContent = '全拼结果';
+            inputEl.placeholder = '例如: xnheulpb';
+        }
+    }
+
+    // --- Event Listeners ---
+    inputEl.addEventListener('input', convert);
+    modeToggle.addEventListener('change', updateUI);
+
+    // --- Initial Setup ---
+    updateUI();
+});
+</script>
+
+</body>
+</html>
